@@ -1,6 +1,4 @@
-# clustersimulator
-Cluster Simulator
-
+# Cluster Simulator
 
 The project is structured as follows:
 - The "Cluster" folder contains an Omnet++ project that simulates a Google Cluster
