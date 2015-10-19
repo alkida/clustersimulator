@@ -1,0 +1,9 @@
+#!/bin/bash
+# task_events.csv must be in this folder
+
+g++ ready.cpp -o ready -O2
+g++ ready2.cpp -o ready2 -O2
+./ready | grep Time | cut -d ' ' -f 2,3,4,5,6 | awk '{ a=$1+600; if(a>150000)exit 1; if(a>=18000)printf "%d %d %d %d %d\n",a,$2,$3,$4,$5 }' > reallog.txt
+./ready2 | grep Time | cut -d ' ' -f 4,6 | awk '{ if($1>150000)exit 1; if($1>=18000)printf "%d %d\n",$1,$2  }' > avgwaitreal.txt
+./ready | grep Time | cut -d ' ' -f 2,3,4,5,6 | awk '{ a=$1+600; if(a>=18000)printf "%d %d %d %d %d\n",a,$2,$3,$4,$5 }' > reallogtot.txt
+

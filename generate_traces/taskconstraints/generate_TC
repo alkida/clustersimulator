@@ -1,0 +1,12 @@
+#!/bin/bash
+
+DBFILE="/home/me/testR/test"
+
+g++ taskconstraints.cpp -o tc -O2 -march=native
+
+sqlite3 $DBFILE -separator "," "select V1,V2 from machine_attributes_values"  > machine_attributes_values.csv
+sqlite3 $DBFILE -separator ',' "select * from task_constraints2 " > task_constraints2.csv
+
+./tc
+
+cat task_constraints3.csv | cut -d ',' -f 2,3,4,5,6 > TC.csv

@@ -1,0 +1,9 @@
+rm -f temp.txt
+while read line ; do
+  echo $line >> temp.txt
+done
+
+mean=`cat temp.txt | ./mean`
+stddev=`cat temp.txt | ./stddev $mean`
+
+echo $mean $stddev | awk '{ print $1 " " ($1 - 1.96 * $2 / sqrt(294) ) " " ($1 + 1.96 * $2 / sqrt(294) ) }'

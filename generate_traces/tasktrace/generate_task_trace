@@ -1,0 +1,37 @@
+#!/bin/bash
+
+PATHTASKEVENTS=../
+PATHTASKUSAGE=../clusterdata-2011-1/task_usage/
+
+echo "Compiling"
+g++ useful_to_durations.cpp -o u2d -O2 -march=native
+g++ merge_durations_usage.cpp -o mdu -O2 -march=native
+g++ usage.cpp -o usage -O2 -march=native
+g++ nonevict.cpp -o nonevict -O2 -march=native
+
+
+echo "task_events_useful.csv"
+cat ${PATHTASKEVENTS}/task_events.csv | cut -d ',' -f 1,3,4,6,8,9,10,11,12,13 > task_events_useful.csv
+
+echo "task_events_durations.csv"
+./u2d
+
+echo "task_events_durations_sorted.csv"
+sort -n -S 50% task_events_durations.csv > task_events_durations_sorted.csv
+
+echo "usage.csv"
+cur=`pwd`
+cd $PATHTASKUSAGE && ${cur}/usage 
+cd $cur
+cp ${PATHTASKUSAGE}/result.csv usage.csv
+
+echo "task_trace_temp.csv"
+./mdu
+
+echo "task_events_nonevict.csv"
+./nonevict
+
+echo "task_events_nonevict_sorted.csv"
+sort -T . -n -S 50% task_trace_nonevict.csv > task_trace_nonevict_sorted.csv
+
+mv task_trace_nonevict_sorted.csv task_trace.csv

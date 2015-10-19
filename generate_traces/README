@@ -1,0 +1,22 @@
+#unzip and merge google traces regarding task events
+# cd google_traces/task_events ;  cat *.csv > task_events.csv
+
+# Import traces inside sqlite and run these queries before run this script
+dbSendQuery(con,"create table machine_attributes_distinct as select distinct V3 as V1 from machine_attributes")
+dbSendQuery(con,"create table machine_attributes_id as select rowid as V1, V1 as V2 from machine_attributes_distinct")
+dbGetQuery(con,"create table machine_attributes2 as select machine_attributes.V1,machine_attributes.V2,machine_attributes_id.V1 as V3, machine_attributes.V4, machine_attributes.V5 from machine_attributes join machine_attributes_id on machine_attributes.V3 = machine_attributes_id.V2") 
+dbGetQuery(con,"create table machine_attributes_useful as select * from machine_attributes2 where V3 in (select V1 from task_constraints_id)")
+dbGetQuery(con,"create table machine_attributes_temp as select distinct V4 from machine_attributes_useful where length(V4) > 20")
+dbGetQuery(con,"create table machine_attributes_values as select rowid as V1, V4 as V2 from machine_attributes_temp")
+dbGetQuery(con,"create table machine_attributes_useful2 as select machine_attributes_useful.V1,machine_attributes_useful.V2,machine_attributes_useful.V3, case when machine_attributes_values.V1 is null then machine_attributes_useful.V4  else machine_attributes_values.V1 end as V4, machine_attributes_useful.V5 from machine_attributes_useful left join machine_attributes_values on machine_attributes_useful.V4 = machine_attributes_values.V2")
+
+dbGetQuery(con,"create table task_constraints_distinct as select distinct V5 as V1 from task_constraints");
+dbGetQuery(con,"create table task_constraints_id as select machine_attributes_id.V1, task_constraints_distinct.V1 as V2 from task_constraints_distinct join machine_attributes_id on task_constraints_distinct.V1 = machine_attributes_id.V2");
+dbGetQuery(con,"create table task_constraints2 as select task_constraints.V1,task_constraints.V2,task_constraints.V3,task_constraints.V4,machine_attributes_id.V1 as V5,task_constraints.V6 from task_constraints join machine_attributes_id on task_constraints.V5 = machine_attributes_id.V2")
+dbGetQuery(con,"create table task_constraints3 as select task_constraints2.V1,task_constraints2.V2,task_constraints2.V3,task_constraints2.V4,task_constraints2.V5,case when machine_attributes_values.V1 is null then task_constraints2.V6 else machine_attributes_values.V1 end as V6 from task_constraints2 left join machine_attributes_values on task_constraints2.V6 = machine_attributes_values.V2");
+
+
+
+#machine_events must be in sqlite database
+
+#modify paths inside scripts

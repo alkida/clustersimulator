@@ -1,0 +1,2 @@
+rm -f t1 t2 t3 t4 t5 ; for i in `seq 18000 450 150000` ; do for j in 2 3 4 5; do cat log.txt | grep "^$i" | cut -d ' ' -f $j | ./confidence | cut -d ' ' -f 1  >> t$j ; done ; done ; for i in `seq 18000 450 150000` ; do echo $i >> t1 ; done ; paste -d ' ' t1 t2 t3 t4 t5 > avglog.txt
+

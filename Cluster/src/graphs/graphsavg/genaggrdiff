@@ -1,0 +1,43 @@
+paste d1 d2 | tr '\t' ' ' | awk '
+function abs(value){
+  return (value<0?-value:value);
+}
+{
+  printf "%f %f %f %f %f %f %f %f %f\n",
+    $1,
+    $7,abs($2-$7),
+    $8,abs($3-$8),
+    $9,abs($4-$9),
+    $10,abs($5-$10) }
+' > abserrors
+cat abserrors | awk '
+   BEGIN { a1=0;a2=0;a3=0;a4=0;
+           sa1=0;sa2=0;sa3=0;sa4=0;
+           m1=0;m2=0;m3=0;m4=0;
+           n=0; } 
+   { if( $3 > a1 )a1=$3;
+     if( $5 > a2 )a2=$5;
+     if( $7 > a3 )a3=$7;
+     if( $9 > a4 )a4=$9;
+     sa1 += $3;
+     sa2 += $5;
+     sa3 += $7;
+     sa4 += $9;
+     m1 += $2;
+     m2 += $4;
+     m3 += $6;
+     m4 += $8;
+     n++;
+   }
+   END { sa1/=n;sa2/=n;sa3/=n;sa4/=n;m1/=n;m2/=n;m3/=n;m4/=n; printf("RQ %f %f %f %f EV %f %f %f %f COMP %f %f %f %f RUNN %f %f %f %f\n",a1,sa1,a1/m1,sa1/m1,a2,sa2,a2/m2,sa2/m2,a3,sa3,a3/m3,sa3/m3,a4,sa4,a4/m4,sa4/m4); }
+' > abserrors1
+
+for i in 3 5 7 9; do cat abserrors | cut -d ' ' -f $i | ./conftime | awk '{ printf("%f %f %f\n",$1,$3-$1,($3/$1-1)*100); }'; done > abserrors2
+
+cat abserrors[1-2] | tr '\n' ' ' | awk '{ 
+  printf("READY QUEUE\nMAX %f\nMAXPERC %f\nAVG %f\nAVGPERC %f\nAVGCONFABS %f\nAVGCONFPERC %f\n",$2,$4,$3,$5,$22,$23);
+  printf("EVICTED\nMAX %f\nMAXPERC %f\nAVG %f\nAVGPERC %f\nAVGCONFABS %f\nAVGCONFPERC %f\n",$7,$9,$8,$10,$25,$26);
+  printf("COMPLETED\nMAX %f\nMAXPERC %f\nAVG %f\nAVGPERC %f\nAVGCONFABS %f\nAVGCONFPERC %f\n",$12,$14,$13,$15,$28,$29);
+  printf("RUNNING\nMAX %f\nMAXPERC %f\nAVG %f\nAVGPERC %f\nAVGCONFABS %f\nAVGCONFPERC %f\n",$17,$19,$18,$20,$31,$32);
+}'
+

@@ -1,0 +1,4 @@
+rm -f databar.txt; for j in 2 3 4 5; do rm -f tbar ; for i in `seq 1 10`; do ./getdataofrun $i | cut -d ' ' -f $j | ./confidence | cut -d ' ' -f 1 >> tbar ; done ; cat tbar | ./confidence >> databar.txt ; done 
+rm -f realdatabar.txt ; for j in 2 3 4 5 ; do a=`cat reallog.txt | cut -d ' ' -f $j | ./confidence | cut -d ' ' -f 1`; echo $a 0 0 >> realdatabar.txt ; done 
+for i in `seq 1 4`; do paste databar.txt realdatabar.txt | head -n $i | tail -n 1 > db$i; done
+

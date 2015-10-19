@@ -1,0 +1,12 @@
+#!/bin/bash
+
+DBFILE="/home/me/testR/test"
+
+g++ machineattributes.cpp -o ma -O2 -march=native
+
+sqlite3 $DBFILE -separator "," "select V2,V3,(case  when length(V4) >0 then V4 else -1 end) from machine_attributes_useful2"  > MA1.csv
+sqlite3 $DBFILE -separator ',' "select V2 from machine_events " | sort | uniq | awk 'BEGIN{n=1} { print n++ "," $1 }' > mid.csv
+
+./ma
+
+mv MA2.csv MA.csv

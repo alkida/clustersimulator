@@ -1,0 +1,7 @@
+cat ../../waits.txt  | grep Time -A2| sed ':a;N;$!ba;s/\nW/ W/g' |grep Wait |less | cut -d ' ' -f 2,6,9 > w.txt
+rm -f w1.txt ; rm -f w2.txt; for i in `seq 1 10`; do ./getwaitdataofrun $i 1 | ./confidence | cut -d ' ' -f 1 >> w1.txt; ./getwaitdataofrun $i 2 | ./confidence | cut -d ' ' -f 1 >> w2.txt; done ; cat w1.txt | ./confidence > wnc.txt; cat w2.txt | ./confidence > wc.txt
+cat wnc.txt wc.txt | tr '\n' ' ' > wncwc.txt
+
+a=`cat avgwaitreal.txt | cut -d ' ' -f 2 | ./confidence | cut -d ' ' -f 1`
+b=`cat wncwc.txt | awk '{print ($1 * 0.94+$4 * 0.06) " " ($2 * 0.94+$5 * 0.06)  " " ($3 * 0.94+$6 * 0.06)  }'`
+echo $a 0 0 $b > waitrealsim.txt

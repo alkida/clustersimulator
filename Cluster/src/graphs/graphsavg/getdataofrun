@@ -1,0 +1,6 @@
+run=$1
+col=$2
+
+for i in `seq 18000 450 150000`; do 
+  cat log.txt | grep "^$i " | head -n $run | tail -n 1;
+done

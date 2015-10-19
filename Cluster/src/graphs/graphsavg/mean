@@ -1,0 +1,2 @@
+awk 'BEGIN {s=0; n=0;} { s += $1; n++; } END { print s/n }'
+

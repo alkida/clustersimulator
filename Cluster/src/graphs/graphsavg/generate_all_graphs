@@ -1,0 +1,1 @@
+cp ../../log.txt . && ./generate_avgresults && ./generate_data && ./generate_data_histogram && ./generate_waits_data && gnuplot genimages.plot

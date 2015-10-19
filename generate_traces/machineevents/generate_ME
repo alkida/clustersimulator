@@ -1,0 +1,12 @@
+#!/bin/bash
+
+DBFILE="/home/me/testR/test"
+
+g++ machineevents.cpp -o me -O2 -march=native
+
+sqlite3 $DBFILE -separator "," "select V1,V2,V3,V5,V6 from machine_events"  > ME1.csv
+sqlite3 $DBFILE -separator ',' "select V2 from machine_events " | sort | uniq | awk 'BEGIN{n=1} { print n++ "," $1 }' > mid.csv
+
+./me
+
+mv ME2.csv ME.csv

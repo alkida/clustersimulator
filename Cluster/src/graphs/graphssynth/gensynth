@@ -1,0 +1,24 @@
+#ready
+res=`cat log.txt   | grep -v cap | cut -d ' ' -f 2 | ./mean`
+rer=`cat reallogtot.txt  | grep -v cap | cut -d ' ' -f 2 | ./mean`
+rerdev=`cat reallogtot.txt  | grep -v cap | cut -d ' ' -f 2 | ./stddev $rer`
+
+#evict
+evs=`cat log.txt   | grep -v cap | cut -d ' ' -f 3 | ./mean`
+evr=`cat reallogtot.txt  | grep -v cap | cut -d ' ' -f 3 | ./mean`
+evrdev=`cat reallogtot.txt  | grep -v cap | cut -d ' ' -f 3 | ./stddev $evr`
+
+#completed
+cos=`cat log.txt   | grep -v cap | cut -d ' ' -f 4 | ./mean`
+cor=`cat reallogtot.txt  | grep -v cap | cut -d ' ' -f 4 | ./mean`
+cordev=`cat reallogtot.txt  | grep -v cap | cut -d ' ' -f 4 | ./stddev $cor`
+
+#running
+rus=`cat log.txt   | grep -v cap | cut -d ' ' -f 5 | ./mean`
+rur=`cat reallogtot.txt  | grep -v cap | cut -d ' ' -f 5 | ./mean`
+rurdev=`cat reallogtot.txt  | grep -v cap | cut -d ' ' -f 5 | ./stddev $rur`
+
+echo $rer $res $rerdev | awk '{ printf "ready(r/s) %d %d %d %d\n",$1,$2,$3,($2/$1-1)*100 }'
+echo $evr $evs $evrdev | awk '{ printf "evict(r/s) %d %d %d %d\n",$1,$2,$3,($2/$1-1)*100 }'
+echo $cor $cos $cordev | awk '{ printf "completed(r/s) %d %d %d %d\n",$1,$2,$3,($2/$1-1)*100 }'
+echo $rur $rus $rurdev | awk '{ printf "running(r/s) %d %d %d %d\n",$1,$2,$3,($2/$1-1)*100 }'

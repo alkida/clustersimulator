@@ -1,0 +1,2 @@
+cat db* | awk '{ v1=$1; v2=$4; c=$3-$1; printf "%f %f %f %f %f\n",v1,v2,c,c/v1*100,(v1/v2-1)*100}'
+cat waitrealsim.txt  | awk '{ v1=$4; v2=$1; c=$6-$4; printf "%f %f %f %f %f\n",v1,v2,c,c/v1*100,(v1/v2-1)*100}'

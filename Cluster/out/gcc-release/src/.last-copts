@@ -1,0 +1,1 @@
+-O2 -DNDEBUG=1 -fPIC  -fno-stack-protector -DHAVE_SWAPCONTEXT  -DHAVE_PCAP -DXMLPARSER=libxml -DWITH_PARSIM -DWITH_NETBUILDER  -I. -Iarrivals -Idistr -Igraphs -Igraphs/graphsavg -Ijob -Imachine -Imessages -Inet -Ischeduler -Itask -I/home/me/omnetpp-4.2.2/include
